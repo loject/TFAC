@@ -5,7 +5,7 @@
 
     <StackLayout>
         <StackLayout VerticalOptions="CenterAndExpand">
-            <Button Text="Page1" Command="{Binding GoToPage1Command}"/>
+            <Button Text="Page1" Command="{Binding GoToattendanceCommand}"/>
             <Button Text="Настройки" Command="{Binding GoToSettingsCommand}"/>
         </StackLayout>
     </StackLayout>

@@ -1,11 +1,26 @@
-﻿using AAC.ViewModels;
+﻿using AAC.Databases;
+using AAC.ViewModels;
 using AAC.Views;
+using System;
+using System.IO;
 using Xamarin.Forms;
 
 namespace AAC
 {
     public partial class App : Application
     {
+        static AttendanceDatabase attendanceDatabase;
+        public static AttendanceDatabase AttendanceDatabase
+        {
+            get
+            {
+                if (attendanceDatabase == null)
+                {
+                    attendanceDatabase = new AttendanceDatabase(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TFAC_Attendances.db3"));
+                }
+                return attendanceDatabase;
+            }
+        }
         public App()
         {
             InitializeComponent();
