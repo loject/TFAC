@@ -1,6 +1,6 @@
-﻿using System;
+﻿using AAC.ViewModels;
+using AAC.Views;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace AAC
 {
@@ -10,7 +10,10 @@ namespace AAC
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            var mainPageViewModel = new MainPageViewModel();
+            var mainPage = new MainPage();
+            mainPage.BindingContext = mainPageViewModel;
+            MainPage = new NavigationPage(mainPage);
         }
 
         protected override void OnStart()
