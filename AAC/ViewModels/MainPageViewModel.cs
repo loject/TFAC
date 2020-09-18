@@ -10,8 +10,8 @@ namespace AAC.ViewModels
         public ICommand GoToAttendanceCommand { get; private set; } = new Command(() =>
         {
             var AttendacePage = new AttendancePage();
-            //var AttendaceVM = AttendanceViewModel();
-            AttendacePage.BindingContext = null;/* TODO: fix this */
+            var AttendaceVM = new AttendaceViewModel();
+            AttendacePage.BindingContext = AttendaceVM;
             App.Current.MainPage.Navigation.PushAsync(AttendacePage);
         });
         public ICommand GoToSettingsPage { get; private set; } = new Command(() =>
