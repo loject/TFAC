@@ -5,6 +5,7 @@
 
     <StackLayout>
         <StackLayout VerticalOptions="CenterAndExpand">
+            <Button Text="Группы" Command="{Binding GoToGroupEditingCommand}"/>
             <Button Text="Посещаемость" Command="{Binding GoToAttendanceCommand}"/>
             <Button Text="Настройки" Command="{Binding GoToSettingsCommand}"/>
         </StackLayout>

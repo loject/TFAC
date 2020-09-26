@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Редактор групп"
+             x:Class="AAC.Views.GroupsPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <CollectionView ItemsSource="{Binding RunnersNames}" SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Expander>
+                            <Expander.Header>
+                                <Label Text="{Binding Name}" Padding="5" FontSize="Large" HorizontalOptions="FillAndExpand"/>
+                            </Expander.Header>
+                            <Label Text="{Binding Name}" Padding="5" HorizontalOptions="FillAndExpand"/>
+                        </Expander>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <Label Text="Нет групп" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                </CollectionView.EmptyView>
+            </CollectionView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

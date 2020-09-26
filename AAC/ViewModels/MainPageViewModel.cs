@@ -5,8 +5,15 @@ using Xamarin.Forms;
 
 namespace AAC.ViewModels
 {
-    class MainPageViewModel
+    public class MainPageViewModel
     {
+        public ICommand GoToGroupEditingCommand { get; private set; } = new Command(() =>
+        {
+            var GroupPage = new GroupsPage();
+            var GroupVM = new GroupsViewModel();
+            GroupPage.BindingContext = GroupVM;
+            App.Current.MainPage.Navigation.PushAsync(GroupPage);
+        });
         public ICommand GoToAttendanceCommand { get; private set; } = new Command(() =>
         {
             var AttendacePage = new AttendancePage();
