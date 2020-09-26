@@ -21,6 +21,18 @@ namespace AAC
                 return attendanceDatabase;
             }
         }
+        static GroupsDatabase groupsDatabase;
+        public static GroupsDatabase GroupsDatabase
+        {
+            get
+            {
+                if (attendanceDatabase == null)
+                {
+                    groupsDatabase = new GroupsDatabase(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TFAC_Groups.db3"));
+                }
+                return groupsDatabase;
+            }
+        }
         public App()
         {
             InitializeComponent();
