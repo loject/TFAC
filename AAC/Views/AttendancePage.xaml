@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              Title="Посещения"
+             x:Name="AttendancePageReference"
              x:Class="AAC.Views.AttendancePage">
     <ContentPage.Content>
         <StackLayout Padding="4">
@@ -17,7 +18,7 @@
                             <Expander.Header>
                                 <StackLayout Orientation="Horizontal">
                                     <Label Text="{Binding Name}" Padding="5" FontSize="Large" HorizontalOptions="FillAndExpand"/>
-                                    <Button Text="⚐" HorizontalOptions="End" />
+                                    <Button Text="⚐" HorizontalOptions="End" Command="{Binding Source={x:Reference AttendancePageReference},Path=BindingContext.MarkAttend}" CommandParameter="{Binding Name}" />
                                 </StackLayout>
                             </Expander.Header>
                             <Grid>
