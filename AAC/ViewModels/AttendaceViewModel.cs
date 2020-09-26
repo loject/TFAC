@@ -1,49 +1,54 @@
-﻿using AAC.Models;
+﻿using AAC.Databases;
+using AAC.Models;
 using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows.Input;
+using Xamarin.Forms;
 
 namespace AAC.ViewModels
 {
     [AddINotifyPropertyChangedInterface]
     public class AttendaceViewModel
     {
-        public ObservableCollection<RunnerAttendancesModel> RunnerAttendance { get; set; } 
+        public ObservableCollection<RunnerAttendancesModel> RunnerAttendance { get; set; }
+        public DateTime AttendDate { get; set; } = DateTime.Now;
+        public TimeSpan AttendTime { get; set; } = DateTime.Now.TimeOfDay;
         public AttendaceViewModel()
         {
             RunnerAttendance = new ObservableCollection<RunnerAttendancesModel>();
             var RAT = App.AttendanceDatabase.GetAttendanceList();
             RAT.Wait();
-            var RA = RAT.Result;
-            for (int i = 0; i < RA.Count; i++)
+            RAT.Result.ForEach(r => AddAttend(r.Name, r.AttendanceDateTime));
+
+            MarkAttend = new Command<string>(RunnerName =>
             {
-                var index = -1;
-                for (int j = 0; i < RunnerAttendance.Count; i++)
+                var attendDateTime = AttendDate.Date + AttendTime;
+                AddAttend(RunnerName, attendDateTime);
+                var attendanceNote = new AttendanceNote { Name = RunnerName, AttendanceDateTime = attendDateTime };
+                App.AttendanceDatabase.SaveAttendanceNote(attendanceNote);
+            });
+        }
+        #region Commands
+        public ICommand MarkAttend { get; set; }
+        #endregion
+        #region Functions
+        private void AddAttend(string Name, DateTime dt)
+        {
+            var index = -1;
+            for (int j = 0; j < RunnerAttendance.Count; j++)
+            {
+                if (RunnerAttendance[j].Name == Name)
                 {
-                    if (RunnerAttendance[j].Name == RA[i].Name)
-                    {
-                        index = j;
-                        break;
-                    }
-                }
-                if (index > 0)
-                {
-                    RunnerAttendance[index].Attendaces.Add(RA[i].AttendanceDateTime);
-                }
-                else
-                {
-                    RunnerAttendance.Add(new RunnerAttendancesModel { Name = RA[i].Name, Attendaces = { RA[i].AttendanceDateTime } });
+                    index = j;
+                    break;
                 }
             }
-            /* TODO: for test */
-            RunnerAttendance = new ObservableCollection<RunnerAttendancesModel>
-            {
-                new RunnerAttendancesModel { Name = "Runner 1", Attendaces = new List<DateTime>{ new DateTime(3845), new DateTime(38445), } },
-                new RunnerAttendancesModel { Name = "Runner 2", Attendaces = new List<DateTime>{ new DateTime(213), new DateTime(345345345), } },
-                new RunnerAttendancesModel { Name = "Runner 3", Attendaces = new List<DateTime>{ new DateTime(574563453), new DateTime(3453453), } },
-            };
+            if (index > 0) RunnerAttendance[index].Attendaces.Add(dt);
+            else RunnerAttendance.Add(new RunnerAttendancesModel { Name = Name, Attendaces = new ObservableCollection<DateTime>{ dt } });
         }
+        #endregion
     }
 }
