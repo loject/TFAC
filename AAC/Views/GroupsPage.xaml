@@ -5,7 +5,7 @@
              x:Class="AAC.Views.GroupsPage">
     <ContentPage.Content>
         <StackLayout>
-            <CollectionView ItemsSource="{Binding RunnersNames}" SelectionMode="None">
+            <CollectionView ItemsSource="{Binding Groups}" SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Expander>
@@ -20,6 +20,7 @@
                     <Label Text="Нет групп" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
                 </CollectionView.EmptyView>
             </CollectionView>
+            <Button Text="Новая группа" Command="{Binding CreateNewGroup}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
