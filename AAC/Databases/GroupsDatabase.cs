@@ -23,8 +23,8 @@ namespace AAC.Databases
             _database.CreateTableAsync<AttendanceNote>().Wait();
         }
 
-        public Task<List<GroupNote>> GetAttendanceList() => _database.Table<GroupNote>().ToListAsync();
-        public Task<int> SaveAttendanceNote(GroupNote data) => _database.InsertAsync(data);
-        public Task<int> ClearAllAttendances() => _database.DeleteAllAsync(new TableMapping(typeof(GroupNote)));
+        public Task<List<GroupNote>> GetGroupList() => _database.Table<GroupNote>().ToListAsync();
+        public Task<int> SaveGroupsNote(GroupNote data) => _database.InsertAsync(data);
+        public Task<int> ClearAllGroups() => _database.DeleteAllAsync(new TableMapping(typeof(GroupNote)));
     }
 }
