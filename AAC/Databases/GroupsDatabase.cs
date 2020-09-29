@@ -23,6 +23,7 @@ namespace AAC.Databases
 
         public Task<List<GroupNote>> GetGroupList() => _database.Table<GroupNote>().ToListAsync();
         public Task<int> SaveGroupsNote(GroupNote data) => _database.InsertAsync(data);
+        public Task<int> RemoveGroupNote(GroupNote group) => _database.Table<GroupNote>().DeleteAsync(g => g.Name == group.Name && g.RunnerName == g.RunnerName);
         public Task<int> ClearAllGroups() => _database.DeleteAllAsync(new TableMapping(typeof(GroupNote)));
     }
 }

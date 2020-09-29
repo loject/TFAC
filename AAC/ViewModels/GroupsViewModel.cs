@@ -15,7 +15,7 @@ namespace AAC.ViewModels
         public string Name { get; set; }
         public Runner()
         {
-            DeleteRunnerCommand = new Command<string>(RN => Group.Remove(this));
+            DeleteRunnerCommand = new Command<string>(RN => Group.DeleteRunner(RN));
         }
         public ICommand DeleteRunnerCommand { get; private set; }
     }
@@ -61,27 +61,26 @@ namespace AAC.ViewModels
                 }
             }
         }
-        public async void DeleteRunner(object RaName)
+        public async void DeleteRunner(string RName)
         {
-            string RName = "alksdjf";
-            for (int i = 0; i < Items.Count; ++i)
-            {
-                /* remove from list */
-                var index = -1;
-                for (int j = 0; j < Items.Count; ++j)
-                {
-                    if (Items[j].Name == RName)
-                    {
-                        index = j;
-                        break;
-                    }
-                }
-                if (index > -1) Items.Remove(Items[i]);
-                else await App.Current.MainPage.Navigation.NavigationStack[^1].DisplayAlert("Ошибка", "Произошла неизвестная внутренняя ошибка", "Ок");
-                /* remove grom storage */
-            }
             try
             {
+                for (int i = 0; i < Items.Count; ++i)
+                {
+                    /* remove from list */
+                    var index = -1;
+                    for (int j = 0; j < Items.Count; ++j)
+                    {
+                        if (Items[j].Name == RName)
+                        {
+                            index = j;
+                            break;
+                        }
+                    }
+                    if (index > -1) Remove(Items[i]);
+                    else await App.Current.MainPage.Navigation.NavigationStack[^1].DisplayAlert("Ошибка", "Произошла неизвестная внутренняя ошибка", "Ок");
+                    /* remove from storage */
+                }
                 App.GroupsDatabase.RemoveGroupNote(new GroupNote { Name = Name, RunnerName = RName}).Wait();
             }
             catch (AggregateException e)
@@ -128,7 +127,7 @@ namespace AAC.ViewModels
                     else
                     {
                         Groups.Add(new Group { Name = Note.Name });
-                        Groups[Groups.Count - 1].Add(new Runner { Name = Note.RunnerName, Group = Groups[Groups.Count - 1] });
+                        Groups[^1].Add(new Runner { Name = Note.RunnerName, Group = Groups[^1] });
                     }
                 }
             }
