@@ -11,27 +11,29 @@ namespace AAC.ViewModels
 {
     public class Runner /* TODO(loject): useless? */
     {
+        public Group Group { get; set; }/* for deleting */
         public string Name { get; set; }
         public Runner()
         {
-
+            DeleteRunnerCommand = new Command<string>(RN => Group.Remove(this));
         }
+        public ICommand DeleteRunnerCommand { get; private set; }
     }
     public class Group : ObservableCollection<Runner>
     {
         public string Name { get; set; }
         public Group() : base()
         {
-            AddNewRunner = new Command(AddRunner);
+            AddNewRunnerCommand = new Command(AddRunner);
         }
         public Group(string name, ObservableCollection<Runner> runners) : base(runners)
         {
             Name = name;
-            AddNewRunner = new Command(AddRunner);
+            AddNewRunnerCommand = new Command(AddRunner);
         }
 
         #region Commands
-        public ICommand AddNewRunner { get; private set; }
+        public ICommand AddNewRunnerCommand { get; private set; }
         #endregion
         #region Functions
         private async void AddRunner()
@@ -43,7 +45,7 @@ namespace AAC.ViewModels
             }
             else
             {
-                Items.Add(new Runner { Name = RunnerName });
+                Items.Add(new Runner { Name = RunnerName, Group = this});
                 try
                 {
                     App.GroupsDatabase.SaveGroupsNote(new Databases.GroupNote { Name = Name, RunnerName = RunnerName }).Wait();
@@ -57,7 +59,39 @@ namespace AAC.ViewModels
                 {
                     Console.WriteLine(e.Message);
                 }
-
+            }
+        }
+        public async void DeleteRunner(object RaName)
+        {
+            string RName = "alksdjf";
+            for (int i = 0; i < Items.Count; ++i)
+            {
+                /* remove from list */
+                var index = -1;
+                for (int j = 0; j < Items.Count; ++j)
+                {
+                    if (Items[j].Name == RName)
+                    {
+                        index = j;
+                        break;
+                    }
+                }
+                if (index > -1) Items.Remove(Items[i]);
+                else await App.Current.MainPage.Navigation.NavigationStack[^1].DisplayAlert("Ошибка", "Произошла неизвестная внутренняя ошибка", "Ок");
+                /* remove grom storage */
+            }
+            try
+            {
+                App.GroupsDatabase.RemoveGroupNote(new GroupNote { Name = Name, RunnerName = RName}).Wait();
+            }
+            catch (AggregateException e)
+            {
+                foreach (var Error in e.InnerExceptions)
+                    Console.WriteLine(Error.Message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
         }
         #endregion
@@ -89,12 +123,12 @@ namespace AAC.ViewModels
                     }
                     if (index > -1)
                     {
-                        Groups[index].Add(new Runner { Name = Note.RunnerName });
+                        Groups[index].Add(new Runner { Name = Note.RunnerName, Group = Groups[index] });
                     }
                     else
                     {
                         Groups.Add(new Group { Name = Note.Name });
-                        Groups[Groups.Count - 1].Add(new Runner { Name = Note.RunnerName });
+                        Groups[Groups.Count - 1].Add(new Runner { Name = Note.RunnerName, Group = Groups[Groups.Count - 1] });
                     }
                 }
             }
