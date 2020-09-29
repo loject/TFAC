@@ -1,7 +1,5 @@
 ﻿using SQLite;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AAC.Databases
@@ -20,7 +18,7 @@ namespace AAC.Databases
         public GroupsDatabase(string dbPath)
         {
             _database = new SQLiteAsyncConnection(dbPath);
-            _database.CreateTableAsync<AttendanceNote>().Wait();
+            _database.CreateTableAsync<GroupNote>().Wait();
         }
 
         public Task<List<GroupNote>> GetGroupList() => _database.Table<GroupNote>().ToListAsync();
