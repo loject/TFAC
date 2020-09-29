@@ -1,7 +1,9 @@
-﻿using PropertyChanged;
+﻿using AAC.Databases;
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -67,6 +69,46 @@ namespace AAC.ViewModels
         public GroupsViewModel()
         {
             Groups = new ObservableCollection<Group>();
+            /* read data from storage */
+            List<GroupNote> DBGroups;
+            try
+            {
+                var tmp = App.GroupsDatabase.GetGroupList();
+                tmp.Wait();
+                DBGroups = tmp.Result;
+                foreach (var Note in DBGroups)
+                {
+                    var index = -1;
+                    for (int i = 0; i < Groups.Count; ++i)
+                    {
+                        if (Groups[i].Name == Note.Name)
+                        {
+                            index = i;
+                            break;
+                        }
+                    }
+                    if (index > -1)
+                    {
+                        Groups[index].Add(new Runner { Name = Note.RunnerName });
+                    }
+                    else
+                    {
+                        Groups.Add(new Group { Name = Note.Name });
+                        Groups[Groups.Count - 1].Add(new Runner { Name = Note.RunnerName });
+                    }
+                }
+            }
+            catch (AggregateException e)
+            {
+                foreach (var Error in e.InnerExceptions)
+                    Console.WriteLine(Error.Message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            /* commands */
             CreateNewGroup = new Command(async () =>
             {
                 var GroupName = await App.Current.MainPage.Navigation.NavigationStack[^1].DisplayPromptAsync("Имя группы", "");
@@ -80,7 +122,8 @@ namespace AAC.ViewModels
                 }
             });
         }
-
+        #region Commands
         public ICommand CreateNewGroup { get; private set; }
+        #endregion
     }
 }
