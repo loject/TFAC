@@ -1,4 +1,5 @@
 ﻿using PropertyChanged;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -6,7 +7,7 @@ using Xamarin.Forms;
 
 namespace AAC.ViewModels
 {
-    public class Runner
+    public class Runner /* TODO(loject): useless? */
     {
         public string Name { get; set; }
         public Runner()
@@ -41,6 +42,20 @@ namespace AAC.ViewModels
             else
             {
                 Items.Add(new Runner { Name = RunnerName });
+                try
+                {
+                    App.GroupsDatabase.SaveGroupsNote(new Databases.GroupNote { Name = Name, RunnerName = RunnerName }).Wait();
+                }
+                catch(AggregateException e)
+                {
+                    foreach (var Error in e.InnerExceptions)
+                        Console.WriteLine(Error.Message);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+
             }
         }
         #endregion
