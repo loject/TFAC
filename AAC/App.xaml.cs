@@ -26,7 +26,7 @@ namespace AAC
         {
             get
             {
-                if (attendanceDatabase == null)
+                if (groupsDatabase == null)
                 {
                     groupsDatabase = new GroupsDatabase(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TFAC_Groups.db3"));
                 }
