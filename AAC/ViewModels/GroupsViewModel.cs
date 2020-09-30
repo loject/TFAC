@@ -1,100 +1,14 @@
 ﻿using AAC.Databases;
+using AAC.Models;
 using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace AAC.ViewModels
 {
-    public class Runner /* TODO(loject): useless? */
-    {
-        public Group Group { get; set; }/* for deleting */
-        public string Name { get; set; }
-        public Runner()
-        {
-            DeleteRunnerCommand = new Command<string>(RN => Group.DeleteRunner(RN));
-        }
-        public ICommand DeleteRunnerCommand { get; private set; }
-    }
-    public class Group : ObservableCollection<Runner>
-    {
-        public string Name { get; set; }
-        public Group() : base()
-        {
-            AddNewRunnerCommand = new Command(AddRunner);
-        }
-        public Group(string name, ObservableCollection<Runner> runners) : base(runners)
-        {
-            Name = name;
-            AddNewRunnerCommand = new Command(AddRunner);
-        }
-
-        #region Commands
-        public ICommand AddNewRunnerCommand { get; private set; }
-        #endregion
-        #region Functions
-        private async void AddRunner()
-        {
-            var RunnerName = await App.Current.MainPage.Navigation.NavigationStack[^1].DisplayPromptAsync("Имя спортсмена", "");
-            if (string.IsNullOrWhiteSpace(RunnerName))
-            {
-                await App.Current.MainPage.Navigation.NavigationStack[^1].DisplayAlert("Ошибка", "Имя не может быть пустым", "Ок");
-            }
-            else
-            {
-                Items.Add(new Runner { Name = RunnerName, Group = this});
-                try
-                {
-                    App.GroupsDatabase.SaveGroupsNote(new Databases.GroupNote { Name = Name, RunnerName = RunnerName }).Wait();
-                }
-                catch(AggregateException e)
-                {
-                    foreach (var Error in e.InnerExceptions)
-                        Console.WriteLine(Error.Message);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-            }
-        }
-        public async void DeleteRunner(string RName)
-        {
-            try
-            {
-                for (int i = 0; i < Items.Count; ++i)
-                {
-                    /* remove from list */
-                    var index = -1;
-                    for (int j = 0; j < Items.Count; ++j)
-                    {
-                        if (Items[j].Name == RName)
-                        {
-                            index = j;
-                            break;
-                        }
-                    }
-                    if (index > -1) Remove(Items[i]);
-                    else await App.Current.MainPage.Navigation.NavigationStack[^1].DisplayAlert("Ошибка", "Произошла неизвестная внутренняя ошибка", "Ок");
-                    /* remove from storage */
-                }
-                App.GroupsDatabase.RemoveGroupNote(new GroupNote { Name = Name, RunnerName = RName}).Wait();
-            }
-            catch (AggregateException e)
-            {
-                foreach (var Error in e.InnerExceptions)
-                    Console.WriteLine(Error.Message);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-        }
-        #endregion
-    }
     [AddINotifyPropertyChangedInterface]
     public class GroupsViewModel 
     {
@@ -145,14 +59,8 @@ namespace AAC.ViewModels
             CreateNewGroup = new Command(async () =>
             {
                 var GroupName = await App.Current.MainPage.Navigation.NavigationStack[^1].DisplayPromptAsync("Имя группы", "");
-                if (string.IsNullOrWhiteSpace(GroupName))
-                {
-                    await App.Current.MainPage.Navigation.NavigationStack[^1].DisplayAlert("Ошибка", "Имя группы не может быть пустым", "Ок");
-                }
-                else
-                {
-                    Groups.Add(new Group(GroupName, new ObservableCollection<Runner>() ));
-                }
+                if (string.IsNullOrWhiteSpace(GroupName)) await App.Current.MainPage.Navigation.NavigationStack[^1].DisplayAlert("Ошибка", "Имя группы не может быть пустым", "Ок");
+                else Groups.Add(new Group(GroupName, new ObservableCollection<Runner>() ));
             });
         }
         #region Commands
