@@ -64,21 +64,13 @@ namespace AAC.Models
         {
             try
             {
-                for (int i = 0; i < Items.Count; ++i)
-                {
-                    /* remove from list */
-                    var index = -1;
-                    for (int j = 0; j < Items.Count; ++j)
-                    {
-                        if (Items[j].Name == RName)
-                        {
-                            index = j;
-                            break;
-                        }
-                    }
-                    if (index > -1) Remove(Items[i]);
-                    else await App.Current.MainPage.Navigation.NavigationStack[^1].DisplayAlert("Ошибка", "Произошла неизвестная внутренняя ошибка", "Ок");
-                }
+                /* remove from list */
+                var index = -1;
+                for (int j = 0; j < Items.Count && index < 0; ++j)
+                    if (Items[j].Name == RName)
+                        index = j;
+                if (index > -1) RemoveAt(index);
+                else await App.Current.MainPage.Navigation.NavigationStack[^1].DisplayAlert("Ошибка", "Произошла неизвестная внутренняя ошибка", "Ок");
                 /* remove from storage */
                 App.GroupsDatabase.RemoveGroupNote(new GroupNote { Name = Name, RunnerName = RName }).Wait();
             }
