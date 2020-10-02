@@ -6,18 +6,7 @@ using Xamarin.Forms;
 
 namespace AAC.Models
 {
-    /* collection storing attendences */
-    public class Runner : ObservableCollection<DateTime>
-    {
-        public Group Group { get; set; }/* for deleting */
-        public string Name { get; set; }
-        public Runner()
-        {
-            DeleteRunnerCommand = new Command<string>(RN => Group.DeleteRunner(RN));
-        }
-        public ICommand DeleteRunnerCommand { get; private set; }
-    }
-    /* collection stroring storing runners from group */
+    /* collection storing runners from group */
     public class Group : ObservableCollection<Runner>
     {
         public string Name { get; set; }
