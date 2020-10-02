@@ -11,33 +11,46 @@
                 <DatePicker Date="{Binding AttendDate}" TextColor="#505050"/>
                 <TimePicker Time="{Binding AttendTime}" TextColor="#505050"/>
             </StackLayout>
-            <CollectionView ItemsSource="{Binding RunnerAttendance}" SelectionMode="None">
+            <CollectionView ItemsSource="{Binding RunnersGroups}" SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Expander>
                             <Expander.Header>
-                                <StackLayout Orientation="Horizontal">
-                                    <Label Text="{Binding Name}" Padding="5" FontSize="Large" HorizontalOptions="FillAndExpand"/>
-                                    <Button Text="⚐" HorizontalOptions="End" Command="{Binding Source={x:Reference AttendancePageReference},Path=BindingContext.MarkAttend}" CommandParameter="{Binding Name}" />
-                                </StackLayout>
+                                <Label Text="{Binding Name}" Padding="5" FontSize="Large" FontAttributes="Bold" HorizontalOptions="FillAndExpand"/>
                             </Expander.Header>
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto" />
-                                    <RowDefinition Height="auto" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Row="0" Grid.Column="0" Text="{Binding AttenLastMonth, StringFormat='За пос. ме.:{0:0.00}'}" Padding="3,0"/>
-                                <Label Grid.Row="0" Grid.Column="1" Text="{Binding AttenLastYear, StringFormat='За пос. год:{0:0.00}'}" Padding="3,0"/>
-                                <Label Grid.Row="0" Grid.Column="2" Text="   " Padding="3,0"/>
-                                <Label Grid.Row="1" Grid.Column="0" Text="{Binding AttenAvgMonth, StringFormat='Ср. ме.:{0:0.00}'}" Padding="3,0"/>
-                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding AttenAvgYear, StringFormat='Ср. год:{0:0.00}'}" Padding="3,0"/>
-                                <Label Grid.Row="1" Grid.Column="2" Text="   " Padding="3,0"/>
-                            </Grid>
+                            <StackLayout BindableLayout.ItemsSource="{Binding}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <Expander>
+                                            <Expander.Header>
+                                                <StackLayout Orientation="Horizontal">
+                                                    <Label Text="{Binding Name}" VerticalOptions="Center" Padding="10,0" FontSize="Medium" HorizontalOptions="FillAndExpand"/>
+                                                    <Button Text="⚐" 
+                                                            Command="{Binding Source={x:Reference AttendancePageReference},Path=BindingContext.MarkAttend}" 
+                                                            CommandParameter="{Binding Name}" />
+                                                </StackLayout>
+                                            </Expander.Header>
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="auto" />
+                                                    <RowDefinition Height="auto" />
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label Grid.Row="0" Grid.Column="0" Text="{Binding AttenLastMonth, StringFormat='За пос. ме.:{0:0.00}'}" Padding="3,0"/>
+                                                <Label Grid.Row="0" Grid.Column="1" Text="{Binding AttenLastYear, StringFormat='За пос. год:{0:0.00}'}" Padding="3,0"/>
+                                                <Label Grid.Row="0" Grid.Column="2" Text="   " Padding="3,0"/>
+                                                <Label Grid.Row="1" Grid.Column="0" Text="{Binding AttenAvgMonth, StringFormat='Ср. ме.:{0:0.00}'}" Padding="3,0"/>
+                                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding AttenAvgYear, StringFormat='Ср. год:{0:0.00}'}" Padding="3,0"/>
+                                                <Label Grid.Row="1" Grid.Column="2" Text="   " Padding="3,0"/>
+                                            </Grid>
+                                        </Expander>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
                         </Expander>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
