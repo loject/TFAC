@@ -13,6 +13,11 @@ namespace AAC.ViewModels
     [AddINotifyPropertyChangedInterface]
     public class AttendaceViewModel
     {
+        /* NOTE: for now */
+        /* TODO: delete this */
+        TimeSpan tmpPeriod = TimeSpan.FromHours(2);
+
+
         public ObservableCollection<Group> RunnersGroups { get; set; }
         public DateTime AttendDate { get; set; } = DateTime.Now;
         public TimeSpan AttendTime { get; set; } = DateTime.Now.TimeOfDay;
@@ -24,8 +29,27 @@ namespace AAC.ViewModels
             {
                 var attendDateTime = AttendDate.Date + AttendTime;
                 AddAttend(RunnerName, attendDateTime);
-                var attendanceNote = new AttendanceNote { Name = RunnerName, AttendanceDateTime = attendDateTime };
+                AttendanceNote attendanceNote = new AttendanceNote { Name = RunnerName, AttendanceDateTime = attendDateTime };
                 App.AttendanceDatabase.SaveAttendanceNote(attendanceNote);
+                (MarkAttend as Command).ChangeCanExecute();
+            }, RunnerName =>
+            {
+                if (RunnerName == null) return false;
+                var indexes = GetIds(RunnerName);
+                bool res = true;
+                if (indexes.Item1 < 0 || indexes.Item2 < 0)
+                {
+                    App.Current.MainPage.DisplayAlert("Ошибка", "Произошла внутреняя ошибка", "ОК");
+                }
+                else
+                {
+                    /* TODO: Optimize this(binary search) */
+                    var Attendance = RunnersGroups[indexes.Item1][indexes.Item2];
+                    for (int i = 0; i < Attendance.Count && res; ++i)
+                        if (Attendance[i].Date == AttendDate.Date && Math.Abs(Attendance[i].TimeOfDay.Ticks - AttendTime.Ticks) < tmpPeriod.Ticks)
+                            res = false;
+                }
+                return res;
             });
         }
         #region Commands
@@ -34,28 +58,40 @@ namespace AAC.ViewModels
         #region Functions
         private void AddAttend(string Name, DateTime dt)
         {
-            var GroupIndex = -1;
-            var RunnerIndex = -1;
-            for (int i = 0;i < RunnersGroups.Count && GroupIndex < 0; ++i)
+            var indexes = GetIds(Name);
+            if (indexes.Item1 >= 0 && indexes.Item2 >= 0)
             {
-                for (int j = 0; j < RunnersGroups[i].Count && RunnerIndex < 0; ++j)
-                { 
-                    if (RunnersGroups[i][j].Name == Name)
-                    {
-                        GroupIndex = i;
-                        RunnerIndex = j;
-                    }
-                }
-            }
-            if (GroupIndex >= 0 && RunnerIndex >= 0)
-            {
-                RunnersGroups[GroupIndex][RunnerIndex].Add(dt);
+                RunnersGroups[indexes.Item1][indexes.Item2].Add(dt);
                 App.AttendanceDatabase.SaveAttendanceNote(new AttendanceNote { Name = Name, AttendanceDateTime = dt });
             }
             else
             {
                 App.Current.MainPage.DisplayAlert("Ошибка", "Произошла внутреняя ошибка", "ОК");
             }
+        }
+        /**
+         * Find group id in RunnersGroup and runner id in group
+         * @param  RunnerName runner name
+         * @return Tuple with first group id and second id in group
+         * @Note return -1 if not found
+         * */
+        private Tuple<int, int> GetIds(string RunnerName)
+        {
+            int GroupId = -1;
+            int RunnerId = -1;
+            for (int i = 0; i < RunnersGroups.Count && GroupId < 0; ++i)
+            {
+                for (int j = 0; j < RunnersGroups[i].Count && RunnerId < 0; ++j)
+                {
+                    if (RunnersGroups[i][j].Name == RunnerName)
+                    {
+                        GroupId = i;
+                        RunnerId = j;
+                        break;
+                    }
+                }
+            }
+            return new Tuple<int, int>(GroupId, RunnerId);
         }
         public void UpdateFromLocalStorage()
         {
