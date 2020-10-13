@@ -13,11 +13,6 @@ namespace AAC.ViewModels
     [AddINotifyPropertyChangedInterface]
     public class AttendaceViewModel
     {
-        /* NOTE: for now */
-        /* TODO: delete this */
-        TimeSpan tmpPeriod = TimeSpan.FromHours(2);
-
-
         public ObservableCollection<Group> RunnersGroups { get; set; }
         public DateTime AttendDate { get; set; } = DateTime.Now;
         public TimeSpan AttendTime { get; set; } = DateTime.Now.TimeOfDay;
@@ -44,9 +39,10 @@ namespace AAC.ViewModels
                 else
                 {
                     /* TODO: Optimize this(binary search) */
+                    var MinPeriod = Settings.MinPeriod;
                     var Attendance = RunnersGroups[indexes.Item1][indexes.Item2];
                     for (int i = 0; i < Attendance.Count && res; ++i)
-                        if (Attendance[i].Date == AttendDate.Date && Math.Abs(Attendance[i].TimeOfDay.Ticks - AttendTime.Ticks) < tmpPeriod.Ticks)
+                        if (Attendance[i].Date == AttendDate.Date && Math.Abs(Attendance[i].TimeOfDay.Ticks - AttendTime.Ticks) < MinPeriod.Ticks)
                             res = false;
                 }
                 return res;

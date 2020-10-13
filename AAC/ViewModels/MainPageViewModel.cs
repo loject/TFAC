@@ -21,9 +21,12 @@ namespace AAC.ViewModels
             AttendacePage.BindingContext = AttendaceVM;
             App.Current.MainPage.Navigation.PushAsync(AttendacePage);
         });
-        public ICommand GoToSettingsPage { get; private set; } = new Command(() =>
+        public ICommand GoToSettingsCommand { get; private set; } = new Command(() =>
         {
-            Console.WriteLine("Hello, settings page");
+            var SettingsPage = new SettingsPage();
+            var SettingsVM = new SettingsViewModel();
+            SettingsPage.BindingContext = SettingsVM;
+            App.Current.MainPage.Navigation.PushAsync(SettingsPage);
         });
     }
 }
