@@ -1,4 +1,5 @@
 ﻿using AAC.Databases;
+using AAC.Views;
 using AAC.Models;
 using PropertyChanged;
 using System;
@@ -47,9 +48,18 @@ namespace AAC.ViewModels
                 }
                 return res;
             });
+            GoToExportPage = new Command(() =>
+            {
+                var ExportPage = new ExportPage();
+                var ExportVM = new ExportViewModel();
+                ExportVM.Attendance = this;
+                ExportPage.BindingContext = ExportVM;
+                App.Current.MainPage.Navigation.PushAsync(ExportPage);
+            });
         }
         #region Commands
         public ICommand MarkAttend { get; set; }
+        public ICommand GoToExportPage { get; set; } 
         #endregion
         #region Functions
         private void AddAttend(string Name, DateTime dt)

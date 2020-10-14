@@ -4,6 +4,9 @@
              Title="Посещения"
              x:Name="AttendancePageReference"
              x:Class="AAC.Views.AttendancePage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Export Excel" Command="{Binding GoToExportPage}"  Priority="1" Order="Secondary"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout Padding="4">
             <StackLayout Orientation="Horizontal">

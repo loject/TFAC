@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AAC.Views.ExportPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Отметить всех" Command="{Binding MarkAllCommand}"  Priority="1" Order="Secondary"/>
+        <ToolbarItem Text="Убрать всех" Command="{Binding UnMarkAllCommand}"  Priority="1" Order="Secondary"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout Visual="Material">
+            <CollectionView ItemsSource="{Binding Attendance.RunnersGroups}" SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Expander>
+                            <Expander.Header>
+                                <Label Text="{Binding Name}" Padding="5" FontSize="Large" FontAttributes="Bold" HorizontalOptions="FillAndExpand"/>
+                            </Expander.Header>
+                            <StackLayout BindableLayout.ItemsSource="{Binding}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="{Binding Name}" VerticalOptions="Center" Padding="10,0" FontSize="Medium" HorizontalOptions="FillAndExpand"/>
+                                            <CheckBox IsChecked="{Binding ForExport}" HorizontalOptions="End"/>
+                                        </StackLayout>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
+                        </Expander>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <Label Text="Пусто" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                </CollectionView.EmptyView>
+            </CollectionView>
+            <Button Text="Экспорт XLSX" Command="{Binding ExportXLSXFileCommand}" HorizontalOptions="FillAndExpand"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
