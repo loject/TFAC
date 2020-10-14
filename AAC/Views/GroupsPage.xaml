@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:Converters="AAC.Converters"
+             Title="Редактор групп"
+             x:Class="AAC.Views.GroupsPage">
+    <ContentPage.Content>
+        <StackLayout Visual="Material">
+            <CollectionView ItemsSource="{Binding Groups}" SelectionMode="None" Visual="Material" IsGrouped="True">
+
+                <CollectionView.GroupHeaderTemplate>
+                    <DataTemplate>
+                        <Label Text="{Binding Name}" Padding="5" FontSize="Large" HorizontalOptions="FillAndExpand"/>
+                    </DataTemplate>
+                </CollectionView.GroupHeaderTemplate>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="{Binding Name, StringFormat=' - {0}'}" Padding="5" HorizontalOptions="FillAndExpand"/>
+                            <Button Text="X" Command="{Binding DeleteRunnerCommand}" CommandParameter="{Binding Name}"/>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.GroupFooterTemplate>
+                    <DataTemplate>
+                        <Button Grid.Row="1" Text="Добавить бегуна" Command="{Binding AddNewRunnerCommand}" Visual="Material"/>
+                    </DataTemplate>
+                </CollectionView.GroupFooterTemplate>
+
+                <CollectionView.EmptyView>
+                    <Label Text="Нет групп" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Visual="Material"/>
+                </CollectionView.EmptyView>
+            </CollectionView>
+
+            <Button Text="Новая группа" Command="{Binding CreateNewGroup}" Visual="Material"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
