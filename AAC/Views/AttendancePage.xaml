@@ -45,7 +45,7 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Label Grid.Row="0" Grid.Column="0" Text="{Binding AttenLastMonth, StringFormat='За пос. ме.:{0:0.00}'}" Padding="3,0"/>
                                                 <Label Grid.Row="0" Grid.Column="1" Text="{Binding AttenLastYear, StringFormat='За пос. год:{0:0.00}'}" Padding="3,0"/>
-                                                <Label Grid.Row="0" Grid.Column="2" Text="   " Padding="3,0"/>
+                                                <Label Grid.Row="0" Grid.Column="2" Text="{Binding LastAttend, StringFormat='Посл.:{0}'}" Padding="3,0"/>
                                                 <Label Grid.Row="1" Grid.Column="0" Text="{Binding AttenAvgMonth, StringFormat='Ср. ме.:{0:0.00}'}" Padding="3,0"/>
                                                 <Label Grid.Row="1" Grid.Column="1" Text="{Binding AttenAvgYear, StringFormat='Ср. год:{0:0.00}'}" Padding="3,0"/>
                                                 <Label Grid.Row="1" Grid.Column="2" Text="   " Padding="3,0"/>

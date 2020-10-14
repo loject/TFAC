@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Экспорт"
              x:Class="AAC.Views.ExportPage">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Отметить всех" Command="{Binding MarkAllCommand}"  Priority="1" Order="Secondary"/>

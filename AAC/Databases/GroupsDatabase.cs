@@ -8,8 +8,8 @@ namespace AAC.Databases
     {
         [PrimaryKey, AutoIncrement]
         public int ID { get; set; }
-        public string Name { get; set; }
-        public string RunnerName { get; set; }
+        public string Name { get; set; }/* move to indicies */
+        public string RunnerName { get; set; }/* move to indicies */
     }
     public class GroupsDatabase
     {

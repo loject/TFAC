@@ -15,10 +15,14 @@ namespace AAC.ViewModels
     public class AttendaceViewModel
     {
         public ObservableCollection<Group> RunnersGroups { get; set; }
-        public DateTime AttendDate { get; set; } = DateTime.Now;
-        public TimeSpan AttendTime { get; set; } = DateTime.Now.TimeOfDay;
+        private DateTime _attendDate;
+        private DateTime _attendTime;
+        public DateTime AttendDate { get => _attendDate; set { _attendDate = value; (MarkAttend as Command)?.ChangeCanExecute(); } }
+        public TimeSpan AttendTime { get => _attendTime.TimeOfDay; set { _attendTime = DateTime.Now.Date + value; (MarkAttend as Command)?.ChangeCanExecute(); } }
         public AttendaceViewModel()
         {
+            AttendDate = DateTime.Now.Date;
+            AttendTime = DateTime.Now.TimeOfDay;
             UpdateFromLocalStorage();
 
             MarkAttend = new Command<string>(RunnerName =>
