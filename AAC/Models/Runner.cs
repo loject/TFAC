@@ -1,9 +1,7 @@
 ﻿using PropertyChanged;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
@@ -14,6 +12,10 @@ namespace AAC.Models
     [AddINotifyPropertyChangedInterface]
     public class Runner : ObservableCollection<DateTime>
     {
+        #region Constants
+        const double DaysPerMonth = 30.5;
+        const double DaysPerYear = 365;
+        #endregion
         public Group Group { get; set; }/* for deleting */
         public string Name { get; set; }
         /* crutch for export page */
@@ -33,6 +35,11 @@ namespace AAC.Models
                 return res;
             }
         }
+        public int AttenLastMonth { get => Items.Select(t => t >= DateTime.Now.AddMonths(-1)).Count(); }
+        public int AttenLastYear { get => Items.Select(t => t >= DateTime.Now.AddYears(-1)).Count(); }
+        public double AttenAvgMonth { get => Items.Count / ((DateTime.Now - FirstAttend).TotalDays / DaysPerMonth); }
+        public double AttenAvgYear { get => Items.Count / ((DateTime.Now - FirstAttend).TotalDays / DaysPerYear); }
+        public DateTime LastAttend { get => this?[^1] ?? DateTime.Now; }
         #endregion
         #region Commands
         public ICommand DeleteRunnerCommand { get; private set; }
